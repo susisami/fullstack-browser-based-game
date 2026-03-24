@@ -6,6 +6,8 @@ A full stack browser-based flight game where the player travels between airports
 
 The objective is to reach **30,000 T** by traveling and correctly answering questions related to the player’s current location.
 
+> **Note:** The game is implemented in **Finnish**.
+
 ---
 
 ## Key Features
@@ -13,32 +15,62 @@ The objective is to reach **30,000 T** by traveling and correctly answering ques
 * Full stack architecture (Python backend + browser frontend)
 * REST API integration for real-time data
 * Location-based gameplay using real-world data
-* User authentication with secure password hashing
-* Dynamic UI updates using JavaScript and AJAX
-* Persistent game state stored in a relational database
+* User authentication and persistent game state
+* Dynamic UI using JavaScript and AJAX
+* Interactive map visualization using Leaflet
 
 ---
 
-## External APIs
+## My Contributions
+- Designed and implemented a class-based Python backend using Flask  
+- Developed REST API endpoints for game logic and data handling  
+- Implemented user authentication with secure password hashing  
+- Designed and structured the relational database and ensured data consistency  
+- Integrated external APIs (OpenWeatherMap, REST Countries) into gameplay logic  
+- Developed dynamic frontend functionality using JavaScript and AJAX  
+- Implemented game logic including scoring system, progression, and persistence  
+- Participated in overall system design and architecture planning  
 
-The game utilizes multiple external REST APIs:
+---
+
+## External APIs & Map Integration
 
 * **OpenWeatherMap API**
-  → Fetches real-time weather data based on player location
+  → Provides real-time weather data based on player location
 
 * **REST Countries API**
-  → Generates location-based questions related to the current country
+  → Provides country-related data and generates questions
+
+* **Leaflet.js**
+  → Used to render interactive maps and display player location
 
 ---
 
 ## Game Logic
 
-1. Player starts at an airport
-2. Player travels between locations (airports)
-3. Game fetches real-time data (weather, country info)
-4. Player answers questions based on the current location
-5. Correct answers reward in-game currency
-6. Game ends when the player reaches **30,000 T**
+* Player starts with a **random amount of money**
+* Player travels between airports
+* Questions are generated based on the current location
+* Correct answer: **+1250 T**
+* Wrong answer: **–1000 T**
+* The goal is to reach **30,000 T**
+
+---
+
+## Game Features
+
+* **Load Game:**
+  Continue a previous session by logging in with existing credentials
+
+* **Save & Quit:**
+  Press `ESC` → select **Save & Quit** to store progress
+
+* **Persistent gameplay:**
+  Game progress can be continued across sessions
+
+* **Feedback system:**
+  Accessible via dropdown menu (red arrow in UI)
+  → Users can submit feedback through a form
 
 ---
 
@@ -48,18 +80,19 @@ The system consists of:
 
 * **Backend (Python / Flask)**
 
-  * Handles game logic and API endpoints
+  * Handles game logic and REST API endpoints
   * Communicates with external APIs
   * Manages database operations
 
 * **Frontend (HTML, CSS, JavaScript)**
 
-  * Displays game interface
-  * Sends requests via AJAX
+  * Browser-based UI
+  * Uses AJAX for dynamic updates
+  * Integrates Leaflet for map visualization
 
 * **Database (MySQL)**
 
-  * Stores user data, game state, and progress
+  * Stores user data, progress, and game state
 
 ---
 
@@ -67,9 +100,9 @@ The system consists of:
 
 The backend follows an object-oriented design:
 
-* A central **SqlConnection** class manages all database connections
+* A base class **SqlConnection** manages database connectivity
 * Other classes inherit from this base class
-* Ensures structured and reusable database interaction
+* Ensures modular and reusable database operations
 
 ---
 
@@ -79,6 +112,7 @@ The backend follows an object-oriented design:
 * SQL (MySQL)
 * JavaScript (AJAX)
 * HTML & CSS
+* Leaflet.js
 * REST APIs
 * OpenWeatherMap API
 * REST Countries API
@@ -94,54 +128,76 @@ git clone https://github.com/susisami/your-repo.git
 cd your-repo
 ```
 
+---
+
 ### 2. Install dependencies
+
+Make sure you have **Python 3.13 or newer** installed.
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Configure environment variables
+---
 
-Create a `.env` file or configure variables manually:
+### 3. Setup database
+
+* Install and configure a **MySQL database**
+* Import required tables (see project structure / SQL files)
+* Ensure database credentials match your backend configuration
+
+---
+
+### 4. Start backend server
+
+Run the backend:
 
 ```bash
-DB_HOST=localhost
-DB_USER=your_user
-DB_PASSWORD=your_password
-DB_NAME=your_database
-OPENWEATHER_API_KEY=your_api_key
+python game.py
 ```
 
-### 4. Run the application
+You should see:
 
-```bash
-python app.py
 ```
+Running on http://127.0.0.1:5000
+```
+
+---
+
+### 5. Launch frontend
+
+* Navigate to:
+
+```id="runpath"
+main > frontend > index.html
+```
+
+* Right-click → **Open with Live Server**
+
+👉 The game will open in your browser.
 
 ---
 
 ## Database
 
-The game uses a relational database structure consisting of:
+The application uses a relational database consisting of:
 
 * Game (player data and progress)
 * Airport (location data)
-* Country (country-related data)
-* Feedback (user feedback)
+* Country (country data)
+* Feedback (user feedback system)
 
 ---
 
 ## Future Improvements
 
-* Improved UI/UX design
+* Enhanced UI/UX design
 * More diverse question system
 * Expanded gameplay mechanics
-* Better data visualization
+* Improved data visualization
 
 ---
 
 ## Author
 
 Sami Souci
-
-
