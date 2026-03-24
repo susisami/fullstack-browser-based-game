@@ -12,7 +12,7 @@ The objective is to reach **30,000 T** by traveling and correctly answering ques
 
 ## Demo
 
-<p align="center" style="display: flex; justify-content: center; ">
+<p align="center" display:"flex" ">
   <img src="docs/gameplay.PNG" width="50%">
   <img src="docs/gameplay_2.PNG" width="50%">
 </p>
