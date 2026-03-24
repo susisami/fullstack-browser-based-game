@@ -20,7 +20,7 @@ The objective is to reach **30,000 T** by traveling and correctly answering ques
 
 ### Database Structure
 <div align="center">
-  <img src="docs/database_structure.png" width="75% height="50%"">
+  <img src="docs/database_structure.png" width="75%" height="50%"">
 </div>
 
 ---
