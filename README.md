@@ -12,7 +12,7 @@ The objective is to reach **30,000 T** by traveling and correctly answering ques
 
 ## Demos
 ![Database](docs/database_structure.png)
-
+![Gameplay](docs/gameplay.png)
 ---
 
 ## My Contributions
