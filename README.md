@@ -22,14 +22,14 @@ The objective is to reach **30,000 T** by traveling and correctly answering ques
 ---
 
 ## My Contributions
+- Acted as team lead, coordinating development tasks and distributing responsibilities across the team 
 - Designed and implemented a class-based Python backend using Flask  
 - Developed REST API endpoints for game logic and data handling  
 - Implemented user authentication with secure password hashing  
 - Designed and structured the relational database and ensured data consistency  
 - Integrated external APIs (OpenWeatherMap, REST Countries) into gameplay logic  
 - Developed dynamic frontend functionality using JavaScript and AJAX  
-- Implemented game logic including scoring system, progression, and persistence  
-- Participated in overall system design and architecture planning  
+- Implemented game logic including scoring system and game progression 
 
 ---
 
