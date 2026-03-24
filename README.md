@@ -15,17 +15,6 @@ The objective is to reach **30,000 T** by traveling and correctly answering ques
 
 ---
 
-## Key Features
-
-* Full stack architecture (Python backend + browser frontend)
-* REST API integration for real-time data
-* Location-based gameplay using real-world data
-* User authentication and persistent game state
-* Dynamic UI using JavaScript and AJAX
-* Interactive map visualization using Leaflet
-
----
-
 ## My Contributions
 - Acted as team lead, coordinating development tasks and distributing responsibilities across the team 
 - Designed and implemented a class-based Python backend using Flask  
@@ -35,6 +24,17 @@ The objective is to reach **30,000 T** by traveling and correctly answering ques
 - Integrated external APIs (OpenWeatherMap, REST Countries) into gameplay logic  
 - Developed dynamic frontend functionality using JavaScript and AJAX  
 - Implemented game logic including scoring system and game progression 
+
+---
+
+## Key Features
+
+* Full stack architecture (Python backend + browser frontend)
+* REST API integration for real-time data
+* Location-based gameplay using real-world data
+* User authentication and persistent game state
+* Dynamic UI using JavaScript and AJAX
+* Interactive map visualization using Leaflet
 
 ---
 
