@@ -1,91 +1,147 @@
 # Browser-Based Flight Game
 
 ## Overview
-A full stack browser-based flight game featuring a Python backend, REST APIs, and an interactive frontend. The application simulates gameplay mechanics while handling user data and game logic through a structured backend.
 
-## Demo / Preview
-## Database Structure
+A full stack browser-based flight game where the player travels between airports, answers location-based questions, and earns in-game currency. The game integrates external REST APIs to provide real-time data and dynamic gameplay.
 
-```mermaid
-erDiagram
+The objective is to reach **30,000 T** by traveling and correctly answering questions related to the player’s current location.
 
-    GAME {
-        string nick PK
-        string password
-        int balance
-        string current_airport FK
-        string current_country FK
-        float current_lat
-        float current_lon
-        int visited_countries
-        float distance_km
-    }
-
-    AIRPORT {
-        string ident PK
-        string name
-        float latitude_deg
-        float longitude_deg
-        string iso_country FK
-        string continent
-    }
-
-    COUNTRY {
-        string iso_country PK
-        string name
-        string continent
-    }
-
-    FEEDBACK {
-        int feedback_num PK
-        string nickname FK
-        string first_name
-        string last_name
-        string contact_email
-        string phone_number
-        string country
-        string feedback_text
-    }
-
-    GAME ||--o{ AIRPORT : "current_airport"
-    GAME ||--o{ COUNTRY : "current_country"
-    AIRPORT }o--|| COUNTRY : "iso_country"
-    FEEDBACK }o--|| GAME : "nickname"
-```
+---
 
 ## Key Features
-- Full stack architecture with Python backend and browser-based frontend  
-- REST API for communication between client and server  
-- User authentication with credential encryption  
-- Dynamic frontend using JavaScript and AJAX  
-- Database integration for persistent game data  
 
-## My Contributions
-- Designed and implemented class-based Python backend using Flask  
-- Developed REST API endpoints for game logic and data handling  
-- Implemented user authentication and credential encryption  
-- Designed database structure and ensured data consistency  
-- Contributed to frontend development (AJAX, UI functionality)  
+* Full stack architecture (Python backend + browser frontend)
+* REST API integration for real-time data
+* Location-based gameplay using real-world data
+* User authentication with secure password hashing
+* Dynamic UI updates using JavaScript and AJAX
+* Persistent game state stored in a relational database
 
-## Technologies
-- Python (Flask)  
-- SQL  
-- JavaScript  
-- HTML & CSS  
-- AJAX  
-- OpenStreetMap API  
+---
+
+## External APIs
+
+The game utilizes multiple external REST APIs:
+
+* **OpenWeatherMap API**
+  → Fetches real-time weather data based on player location
+
+* **REST Countries API**
+  → Generates location-based questions related to the current country
+
+---
+
+## Game Logic
+
+1. Player starts at an airport
+2. Player travels between locations (airports)
+3. Game fetches real-time data (weather, country info)
+4. Player answers questions based on the current location
+5. Correct answers reward in-game currency
+6. Game ends when the player reaches **30,000 T**
+
+---
 
 ## Architecture
-The system consists of:
-- Backend server (Flask) handling game logic and APIs  
-- Frontend interface running in the browser  
-- Database for storing user and game data  
 
-## How It Works
-1. User interacts with the browser-based UI  
-2. Frontend sends requests via AJAX  
-3. Backend processes logic and communicates with database  
-4. Data is returned and dynamically rendered in the UI
+The system consists of:
+
+* **Backend (Python / Flask)**
+
+  * Handles game logic and API endpoints
+  * Communicates with external APIs
+  * Manages database operations
+
+* **Frontend (HTML, CSS, JavaScript)**
+
+  * Displays game interface
+  * Sends requests via AJAX
+
+* **Database (MySQL)**
+
+  * Stores user data, game state, and progress
+
+---
+
+## Backend Structure
+
+The backend follows an object-oriented design:
+
+* A central **SqlConnection** class manages all database connections
+* Other classes inherit from this base class
+* Ensures structured and reusable database interaction
+
+---
+
+## Technologies
+
+* Python (Flask)
+* SQL (MySQL)
+* JavaScript (AJAX)
+* HTML & CSS
+* REST APIs
+* OpenWeatherMap API
+* REST Countries API
+
+---
 
 ## Setup & Run
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/susisami/your-repo.git
+cd your-repo
+```
+
+### 2. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Configure environment variables
+
+Create a `.env` file or configure variables manually:
+
+```bash
+DB_HOST=localhost
+DB_USER=your_user
+DB_PASSWORD=your_password
+DB_NAME=your_database
+OPENWEATHER_API_KEY=your_api_key
+```
+
+### 4. Run the application
+
+```bash
+python app.py
+```
+
+---
+
+## Database
+
+The game uses a relational database structure consisting of:
+
+* Game (player data and progress)
+* Airport (location data)
+* Country (country-related data)
+* Feedback (user feedback)
+
+---
+
+## Future Improvements
+
+* Improved UI/UX design
+* More diverse question system
+* Expanded gameplay mechanics
+* Better data visualization
+
+---
+
+## Author
+
+Sami Souci
+
 
