@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <title>Game leaderboards</title>
+
+    <!-- FONTIT -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="leaderboards.css">
+
+    <!-- IKONIT -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <style>
+        body {
+            font-family: 'Rubik', sans-serif;
+        }
+
+        h1, .player-name, .podium-player .rank {
+            font-family: 'Orbitron', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <header class="leaderboards-header">
+        <div class="header-content">
+            <h1><i class="fas fa-trophy"></i> leaderboards</h1>
+            <a href="../../testing/frontend/index.html" class="back-button"><i class="fas fa-arrow-left"></i> Back to Game</a>
+        </div>
+    </header>
+
+    <main class="leaderboards-main">
+        <div class="leaderboards-container">
+
+            <!-- Palkintopalli -->
+            <div class="podium" id="podium-container">
+                <!-- Top 3 pelaajaa lisätään dynaamisesti -->
+            </div>
+
+            <!-- Pelaajalista -->
+            <div class="players-list">
+                <div class="list-header">
+                    <div class="header-rank">Sijoitus</div>
+                    <div class="header-player">Pelaaja</div>
+                    <div class="header-score">Nimi</div>
+                </div>
+                <div id="players-container">
+                    <!-- Loput pelaajat lisätään dynaamisesti -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="leaderboards-footer">
+        <p>&copy; Made in 2025</p>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script src="leaderboards.js"></script>
+</body>
+</html>

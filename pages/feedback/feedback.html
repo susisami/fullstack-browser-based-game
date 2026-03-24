@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="feedback.css"/>
+    <link
+            href="https://fonts.googleapis.com/css2?family=Iceberg&display=swap"
+            rel="stylesheet"
+    />
+    <script
+            src="https://kit.fontawesome.com/0617b42630.js"
+            crossorigin="anonymous"
+    ></script>
+    <script src="feedback.js" defer></script>
+    <title>Feedback</title>
+</head>
+<body>
+<main>
+    <i class="fas fa-comment-alt" id="feedbackButton"></i>
+
+    <dialog id="feedbackDialog">
+        <h1>Leave Your Feedback</h1>
+        <form id="feedbackForm">
+            <div class="form-group">
+                <label for="nickname">Nickname:</label>
+                <input type="text" id="nickname" name="nickname" required/>
+            </div>
+            <div class="form-group">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" name="firstName" required/>
+            </div>
+
+            <div class="form-group">
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" name="lastName" required/>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required/>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="feedbackText">Your Feedback:</label>
+                <textarea id="feedbackText" name="feedback" required></textarea>
+            </div>
+
+            <div class="form-buttons">
+                <button type="submit" class="button-30">Submit</button>
+                <button type="button" id="cancelButton" class="button-30">
+                    Cancel
+                </button>
+            </div>
+        </form>
+    </dialog>
+
+    <dialog id="thankYouDialog">
+        <h2>Thank You!</h2>
+        <p>We appreciate your feedback.</p>
+        <div class="form-buttons">
+            <button id="closeThankYou" class="button-30">Close</button>
+        </div>
+    </dialog>
+</main>
+</body>
+</html>
