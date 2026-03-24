@@ -5,7 +5,6 @@ from geopy.distance import geodesic
 from werkzeug.exceptions import HTTPException
 from werkzeug.security import generate_password_hash, check_password_hash
 
-
 program = Flask(__name__)
 CORS(program)
 
@@ -206,7 +205,7 @@ class UpdateUser(SqlConnection):
 
     def adjust_country(self, current_icao):
         self.current_airport = current_icao
-        
+
         try:
             with self.connection().cursor() as cursor:
                 sql = """SELECT country.name FROM country, airport WHERE airport.ident = %s and airport.iso_country = country.iso_country"""
@@ -218,12 +217,12 @@ class UpdateUser(SqlConnection):
                     return self.country
                 else:
                     print("SQL-Query fetched no results.")
-               
+
         except pymysql.MySQLError as e:
             return f"Tietokantavirhe: {e}"
 
         except Exception as e:
-            return f"Satunnaisvirhe: {e}"       
+            return f"Satunnaisvirhe: {e}"
 
     def update(self, datalist):
         self.datalist = datalist
@@ -355,7 +354,7 @@ class LoadGame(SqlConnection):
                 result = cursor.fetchone()
                 if result:
                     self.loaded_data_dict = {
-                        'Username' : result[0],
+                        'Username': result[0],
                         'Balance': result[1],
                         'Airport': result[2],
                         'Country': result[3],
@@ -380,7 +379,7 @@ class LoadGame(SqlConnection):
         # Aliluokka, missä lasketaan etäisyys käyttäjän nykyisen sijainnin ja valitun sijainnin välillä, muutetaan käyttäjän balance vastaamaan etäisyyden generoimaa rahamäärää (balancen ja generoidun rahamäärän EROTUS) ja luodaan tarvittu data [100] satunnaisen lentokentän merkkaamiseksi leaflet-karttaan. GenerateTravel metodit ajetaan ennen UpdateUser-luokan metodeja, jotta päivitetty data on oikea. Hyödynnä tässä muita jo luotuja aliluokkia esim. käyttäjätietojen päivittämiseen, sekä OHJ1 funktioita.
 
 
-#Aliluokka juoksevan pelaajadatan (kuljetut kilometrit, rahamäärä, vieraillut lentokentät jne.) päivitykseen, sekä seuraavien mahdollisten lentokenttien hakemiseksi.
+# Aliluokka juoksevan pelaajadatan (kuljetut kilometrit, rahamäärä, vieraillut lentokentät jne.) päivitykseen, sekä seuraavien mahdollisten lentokenttien hakemiseksi.
 class GenerateTravel(SqlConnection):
     def __init__(self, host, port, database, user, password, autocommit):
         super().__init__(host, port, database, user, password, autocommit)
@@ -388,7 +387,7 @@ class GenerateTravel(SqlConnection):
     def connection(self):
         return super().connection()
 
-    def list_airports(self, limit = 30):
+    def list_airports(self, limit=30):
         try:
             with self.connection().cursor() as cursor:
                 sql = """SELECT name, latitude_deg, longitude_deg, ident, type, elevation_ft, continent, iso_country, iso_region, municipality, scheduled_service, gps_code
@@ -402,38 +401,38 @@ class GenerateTravel(SqlConnection):
                     'lat': float(row[1]),
                     'lon': float(row[2]),
                     'icao': row[3],
-                    'type' : row[4],
-                    'elevation_ft' : row[5],
-                    'continent' : row[6],
-                    'country' : row[7],
-                    'country_region' : row[8],
-                    'city' : row[9],
-                    'service-schedule' : row[10],
-                    'gps-code' : row[11]
+                    'type': row[4],
+                    'elevation_ft': row[5],
+                    'continent': row[6],
+                    'country': row[7],
+                    'country_region': row[8],
+                    'city': row[9],
+                    'service-schedule': row[10],
+                    'gps-code': row[11]
                 } for row in cursor.fetchall()]
         except Exception as e:
             return f"Virhe lentokenttien listauksessa: {e}"
 
     def current_icao(self, username):
         self.username = username
-        
+
         try:
             with self.connection().cursor() as cursor:
                 icao_code_query = "SELECT current_icao_code FROM game WHERE nick = %s;"
                 cursor.execute(icao_code_query, (username,))
                 result = cursor.fetchone()
-                
+
                 if result:
                     return result[0]
                 else:
                     return f"Pelaajalle {username} ei löytynyt ICAO-koodia."
-        
+
         except Exception as e:
             return f"Virhe ICAO-koodin haussa: {e}"
-            
+
     def get_airport_coordinates(self, icao_code):
         self.icao_code = icao_code
-        
+
         try:
             with self.connection().cursor() as cursor:
                 sql = """SELECT latitude_deg, longitude_deg 
@@ -444,10 +443,10 @@ class GenerateTravel(SqlConnection):
                 if result:
                     return float(result[0]), float(result[1])
                 return f'No latitude and longitude with the given icao :{icao_code}'
-        
+
         except Exception as e:
             return f"Virhe koordinaattien haussa: {e}"
-            
+
     def calculate_distance(self, new_icao, old_icao):
         self.new_icao = new_icao
         self.old_icao = old_icao
@@ -458,9 +457,6 @@ class GenerateTravel(SqlConnection):
         if coords_1 and coords_2:
             distance = geodesic(coords_1, coords_2).kilometers
             return int(distance)
-        
-        else:
-           return "ICAO-code given was incorrect."
 
 
 #Luokka reaaliaikaisen datan hakuun käyttäjän sen hetkisestä sijainnista.
@@ -543,45 +539,48 @@ class Utility(SqlConnection):
             return f"Satunnaisvirhe: {e}"
 
     def show_leaderboard(self):
-        self.leaderboard = []
-
         try:
             with self.connection().cursor() as cursor:
-                sql = """SELECT nick, balance FROM game ORDER BY balance DESC;"""
+                # Modified query to ensure proper ordering
+                sql = """SELECT nick AS username, balance 
+                         FROM game 
+                         WHERE balance > 0 
+                         ORDER BY balance DESC 
+                         LIMIT 10;"""  # Limit results
+
                 cursor.execute(sql)
                 result = cursor.fetchall()
-                
-                if result:
-                    for row in result:
-                        self.leaderboard.append(row)
-                    return self.leaderboard                
-                
-                else: 
-                    return 'SQL-query fetched no boards or leaders.'
+
+                if not result:
+                    return []  # Return empty list instead of string
+
+                return result
 
         except pymysql.MySQLError as e:
-            return f"Tietokantavirhe: {e}"
+            print(f"Database error: {e}")
+            return []  # Return empty list on error
 
         except Exception as e:
-            return f"Satunnaisvirhe: {e}"
-        
+            print(f"Unexpected error: {e}")
+            return []
+
     def delete_user(self, username):
         self.username = username
-        
+
         try:
             with self.connection().cursor() as cursor:
                 sql = """DELETE FROM game WHERE nick = %s"""
                 cursor.execute(sql, (username,))
 
-                sql2 = """SELECT * FROM game where nick = %s"""    
+                sql2 = """SELECT * FROM game where nick = %s"""
                 cursor.execute(sql2, (username,))
-                
+
                 result = cursor.fetchone()
                 if result == None:
                     return True
                 else:
                     return False
-        
+
         except pymysql.MySQLError as e:
             return f"Tietokantavirhe: {e}"
 
@@ -697,7 +696,7 @@ class CountryQuiz:
         return random.choice(fallbacks)
 
 
-#Uuden Käyttäjän luominen päätepiste
+# Uuden Käyttäjän luominen päätepiste
 @program.route('/game/users/insert', methods=['POST'])
 def insert_new_user():
     try:
@@ -723,9 +722,9 @@ def insert_new_user():
 
                 'Latitude & Longitude': connection_1.starting_lat_lon(st_airport),
 
-                'Visited Countries' : 0,
+                'Visited Countries': 0,
 
-                'Traveled Kilometers' : 0,
+                'Traveled Kilometers': 0,
 
                 'Question': ''
             }
@@ -744,10 +743,11 @@ def insert_new_user():
                 coordinate_list = map_data.list_airports()
 
                 # GenerateRealTimeData-class generated data:
-                realtimedata = GenerateRealTimeData(starter_data['Latitude & Longitude'][0], starter_data['Latitude & Longitude'][1])
+                realtimedata = GenerateRealTimeData(starter_data['Latitude & Longitude'][0],
+                                                    starter_data['Latitude & Longitude'][1])
                 fetchrealtimedata = realtimedata.fetch_real_time_data()
 
-                #Generate the continent quiz:
+                # Generate the continent quiz:
                 quiz_question = CountryQuiz(starter_data['Country']).fetch_country_quiz()
 
                 # Data terminaalissa:
@@ -764,6 +764,7 @@ def insert_new_user():
 
     except Exception as e:
         return jsonify({'Program ran into an error': str(e)}, {'Status': 400})
+
 
 @program.errorhandler(400)
 @program.errorhandler(404)
@@ -807,22 +808,20 @@ def update_user():
 
         connection_1 = UpdateUser('localhost', 3306, 'airplane_simulator_v6', 'user', 'password', True)
 
-        #Update & Insert into datalist
+        # Update & Insert into datalist
         connection_2 = GenerateTravel('localhost', 3306, 'airplane_simulator_v6', 'user', 'password', True)
 
-
-        #Increasing traveled kilometers and balance before updating the database:
+        # Increasing traveled kilometers and balance before updating the database:
         traveled_kilometers = connection_2.calculate_distance(datalist[4], datalist[5])
         datalist[10] = int(datalist[10]) + traveled_kilometers
 
-        #Adjusting the country tab to show the full name of the country:
+        # Adjusting the country tab to show the full name of the country:
         country_fullname = connection_1.adjust_country(datalist[4])
         datalist[3] = country_fullname
 
-        #Update user data in SQL:
+        # Update user data in SQL:
         update_result = connection_1.update(datalist)
-        
-        
+
         if isinstance(update_result, str):
             return jsonify({'Error': update_result}, {'Status': 400})
 
@@ -841,19 +840,20 @@ def update_user():
                 realtimedata = GenerateRealTimeData(update_fetch_result['Latitude'], update_fetch_result['Longitude'])
                 fetchrealtimedata = realtimedata.fetch_real_time_data()
 
-                #Generate the continent quiz:
+                # Generate the continent quiz:
                 quiz_question = CountryQuiz(update_fetch_result['Country']).fetch_country_quiz()
-                
+
                 # Data terminaalissa:
                 print("User successfully updated!")
 
                 return jsonify({'Personal & Airport Data': update_fetch_result,
                                 'Map Data': coordinate_list,
                                 'Real Time Data': fetchrealtimedata,
-                                'Question' : quiz_question}, {'Status': 200})
+                                'Question': quiz_question}, {'Status': 200})
 
     except Exception as e:
         return jsonify({'Program ran into an error': str(e)}, {'Status': 400})
+
 
 @program.errorhandler(400)
 @program.errorhandler(404)
@@ -914,6 +914,7 @@ def load_game():
     except Exception as e:
         return jsonify({'Program ran into an error': str(e)}, {'Status': 400})
 
+
 @program.errorhandler(400)
 @program.errorhandler(404)
 @program.errorhandler(405)
@@ -942,16 +943,17 @@ def delete_user():
         result = connection.delete_user(data['Username'])
 
         if type(result) == str:
-            return jsonify({'Error' : result}, {'Status' : 400})
-        
+            return jsonify({'Error': result}, {'Status': 400})
+
         elif result == True:
-            return jsonify({'Message' : f"Käyttäjäsi {data['Username']} on poistettu onnistuneesti."})
-        
+            return jsonify({'Message': f"Käyttäjäsi {data['Username']} on poistettu onnistuneesti."})
+
         else:
-            return jsonify({'Message' : f"Käyttäjäsi {data['Username']} poistamisessa ilmeni odottamaton virhe."})
+            return jsonify({'Message': f"Käyttäjäsi {data['Username']} poistamisessa ilmeni odottamaton virhe."})
 
     except Exception as e:
         return jsonify({'Error-message': str(e)}, {'Status': 400})
+
 
 @program.errorhandler(400)
 @program.errorhandler(404)
@@ -977,7 +979,6 @@ def feedback():
         data = request.get_json()
         print(f'Retrieved data: {data}')
 
-
         # Ei haeta enää nicknameä tietokannasta, vaan otetaan suoraan lomakkeelta
         nickname = data.get("nickname", "Unknown")
 
@@ -993,7 +994,9 @@ def feedback():
 
         connection_1 = Utility('localhost', 3306, 'airplane_simulator_v6', 'user', 'password', True)
         result = connection_1.send_feedback(datalist)
-        
+
+        print(f"DEBUG DATALIST: {datalist}")
+
         if isinstance(result, str):
             return jsonify({'Error-message': result, 'Status': 400})
         else:
@@ -1002,8 +1005,10 @@ def feedback():
             else:
                 return jsonify({'Message': 'Feedback was not sent successfully, please try again.', 'Status': 500})
 
+
     except Exception as e:
-        return jsonify({'Program ran into an error': str(e)}, {'Status': 400})
+        return jsonify({'Program ran into an error': str(e), 'Status': 400})
+
 
 @program.errorhandler(400)
 @program.errorhandler(404)
@@ -1022,23 +1027,42 @@ def errorhandling_super(error):
         })
 
 
-#Leaderboards päätepiste
-@program.route('/game/users/leaderboards', methods = ['GET'])
+# Leaderboards päätepiste
+@program.route('/game/users/leaderboards', methods=['GET'])
 def show_leaderboards():
     try:
         connection = Utility('localhost', 3306, 'airplane_simulator_v6', 'user', 'password', True)
+        leaderboard_data = connection.show_leaderboard()
 
-        result = connection.show_leaderboard()
+        # Handle error cases where string is returned
+        if isinstance(leaderboard_data, str):
+            return jsonify({
+                'Error': leaderboard_data,
+                'Status': 404
+            }), 404
 
-        if type(result) == str:
-            return jsonify({'Error' : result}, {'Status' : 400})
+        # Format the data properly
+        formatted_data = [
+            {
+                'username': row[0],  # nick
+                'balance': row[1],  # balance
+                'rank': idx + 1  # add ranking
+            }
+            for idx, row in enumerate(leaderboard_data)
+        ]
 
-        else:
-            return jsonify({'Leaderboard' : result}, {'Status' : 200})
+        return jsonify({
+            'Leaderboard': formatted_data,
+            'Status': 200
+        })
 
     except Exception as e:
-        return jsonify({'Program ran into an error': str(e)}, {'Status': 400})
-    
+        return jsonify({
+            'Error': str(e),
+            'Status': 500
+        }), 500
+
+
 @program.errorhandler(400)
 @program.errorhandler(404)
 @program.errorhandler(405)
@@ -1062,25 +1086,24 @@ def save_n_quit():
     try:
         data = request.get_json()
 
-        print(data)
-
         # Create a datalist manually in the correct order
         datalist = [
-            data['Username'],
-            data['Balance'],
-            data['Airport'],
-            data['Country'],
-            data['ICAO'],
-            data['Continent'],
-            data['Latitude'],
-            data['Longitude'],
-            data['Visited Countries'],
-            data['Traveled kilometers']
+            data['Old Game Data']['Username'],
+            data['Old Game Data']['Balance'],
+            data['New Game Data']['New Airport'],
+            data['New Game Data']['New Country'],
+            data['New Game Data']['New ICAO'],
+            data['Old Game Data']['ICAO'],
+            data['New Game Data']['New Continent'],
+            data['New Game Data']['New Latitude'],
+            data['New Game Data']['New Longitude'],
+            data['Old Game Data']['Visited Countries'],
+            data['Old Game Data']['Traveled kilometers']
         ]
 
         connection_1 = UpdateUser('localhost', 3306, 'airplane_simulator_v6', 'user', 'password', True)
-        
-        #Update user data in SQL:
+
+        # Update user data in SQL:
         update_result = connection_1.update(datalist)
         if isinstance(update_result, str):
             return jsonify({'Error': update_result}, {'Status': 400})
@@ -1098,6 +1121,7 @@ def save_n_quit():
     except Exception as e:
         return jsonify({'Program ran into an error': str(e)}, {'Status': 400})
 
+
 @program.errorhandler(400)
 @program.errorhandler(404)
 @program.errorhandler(405)
@@ -1113,6 +1137,7 @@ def errorhandling_super(error):
             'Error-message': 'Unknown error',
             'Status': 500
         })
+
 
 if __name__ == '__main__':
     program.run(use_reloader=True, host='127.0.0.1', port=5000)
