@@ -38,4 +38,7 @@ The system consists of:
 1. User interacts with the browser-based UI  
 2. Frontend sends requests via AJAX  
 3. Backend processes logic and communicates with database  
-4. Data is returned and dynamically rendered in the UI 
+4. Data is returned and dynamically rendered in the UI
+
+## Setup & Run
+
