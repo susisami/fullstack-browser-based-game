@@ -14,10 +14,11 @@ The objective is to reach **30,000 T** by traveling and correctly answering ques
 
 <p align="center">
   <img src="docs/gameplay.PNG" width="50%">
+  <img src="docs/gameplay_2.PNG" width="50%">
 </p>
 
 <p align="center">
-  <img src="docs/database_structure.png" width="50%">
+  <img src="docs/database_structure.png" width="75%" height="75%"">
 </p>
 
 ---
