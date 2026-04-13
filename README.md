@@ -212,7 +212,3 @@ The application uses a relational database consisting of:
 * Improved data visualization
 
 ---
-
-## Author
-
-Sami Souci
